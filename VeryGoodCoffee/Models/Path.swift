@@ -13,7 +13,7 @@ public enum Path: String {
     var path: String {
         switch self {
         case .randomPhoto:
-            return "https://coffee.alexflipnote.dev/random"
+            return "https://coffee.alexflipnote.dev/rando"
         case .randomPhotoJSON:
             return "https://coffee.alexflipnote.dev/random.json"
         }

@@ -6,20 +6,24 @@
 //
 
 import SwiftUI
-import UIKit
 import Combine
+import SwiftData
 
 @MainActor
 final class CoffeePictureSelectionViewModel: ObservableObject {
     
     // MARK: - Public Properties
     
-    @Published var currentCoffeeImage: UIImage?
     @Published var isLoading: Bool = false
+    @Published var currentError: VGError? = nil
+    @Published var coffee: Coffee?
+    @Published var favoriteCoffees: [Coffee] = []
+    
     
     // MARK: - Private Properties
     
     private let coffeeAPIService: CoffeeAPIServiceProtocol?
+    private var tryAgain: (() -> Void)?
 
     // MARK: - Init
     
@@ -38,17 +42,16 @@ final class CoffeePictureSelectionViewModel: ObservableObject {
         
         do {
             let newImage = try await coffeeAPIService?.fetchRandomCoffeePicture() ?? Data()
-            guard let newCoffeeImage = UIImage(data: newImage) else {
-                return
-            }
-            currentCoffeeImage = nil
-            currentCoffeeImage = newCoffeeImage
+            coffee = Coffee(coffeeImageData: newImage)
         } catch {
+            currentError = error as? VGError
             print(error.localizedDescription)
         }
     }
 
-    func favoriteCurrentPicture() {
-        // TODO: - Implement Favorite Picture
+    func favoriteCurrentPicture() throws {
+        if let coffee {
+            favoriteCoffees.append(coffee)
+        }
     }
 }
