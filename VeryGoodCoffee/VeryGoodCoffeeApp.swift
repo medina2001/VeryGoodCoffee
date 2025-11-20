@@ -12,7 +12,7 @@ import SwiftData
 struct VeryGoodCoffeeApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Coffee.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -25,7 +25,7 @@ struct VeryGoodCoffeeApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            CoffeePictureSelectionView()
         }
         .modelContainer(sharedModelContainer)
     }
