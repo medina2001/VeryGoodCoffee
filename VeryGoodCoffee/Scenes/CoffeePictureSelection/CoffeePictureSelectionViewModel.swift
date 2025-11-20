@@ -21,13 +21,17 @@ final class CoffeePictureSelectionViewModel: ObservableObject {
     
     // MARK: - Private Properties
     
-    private let coffeeAPIService: CoffeeAPIServiceProtocol?
+    private let coffeeAPIService: CoffeeAPIServiceProtocol
     private var tryAgain: (() -> Void)?
 
     // MARK: - Init
     
-    init(coffeeAPIService: CoffeeAPIServiceProtocol? = nil) {
-        self.coffeeAPIService = coffeeAPIService ?? CoffeeAPIService()
+    init(coffeeAPIService: CoffeeAPIServiceProtocol) {
+        self.coffeeAPIService = coffeeAPIService
+    }
+    
+    convenience init() {
+        self.init(coffeeAPIService: CoffeeAPIService())
     }
 
     // MARK: - Public Methods
@@ -40,19 +44,13 @@ final class CoffeePictureSelectionViewModel: ObservableObject {
         }
         
         do {
-            let newImage = try await coffeeAPIService?.fetchRandomCoffeePicture() ?? Data()
+            let newImage = try await coffeeAPIService.fetchRandomCoffeePicture()
             currentError = nil
             coffee = Coffee(coffeeImageData: newImage)
         } catch {
             currentError = nil
             currentError = error as? VGError
             print(error.localizedDescription)
-        }
-    }
-
-    func favoriteCurrentPicture() throws {
-        if let coffee {
-            // TODO: - Save on SwiftData
         }
     }
 }

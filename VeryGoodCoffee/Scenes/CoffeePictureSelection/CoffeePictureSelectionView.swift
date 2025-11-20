@@ -41,19 +41,16 @@ struct CoffeePictureSelectionView: View {
                         Spacer()
                         
                         FavoritePictureButton(isFavoritePicture: $isFavoritePicture) {
-                            do {
-                                try viewModel.favoriteCurrentPicture()
-                            } catch {
-                                print("Error")
-                            }
-                        }
-                        .onChange(of: isFavoritePicture) {
-                            if isFavoritePicture {
+                            if let coffee = viewModel.coffee {
+                                context.insert(coffee)
                                 do {
-                                    try viewModel.favoriteCurrentPicture()
+                                    try context.save()
+                                    return true
                                 } catch {
-                                    print(error.localizedDescription)
+                                    return false
                                 }
+                            } else {
+                                return false
                             }
                         }
                     }
