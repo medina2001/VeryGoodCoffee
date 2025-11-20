@@ -9,7 +9,8 @@ import UIKit
 import SwiftData
 
 @Model
-final class Coffee {
+final class Coffee: Identifiable {
+    @Attribute(.unique) var id = UUID()
     @Attribute(.externalStorage) var coffeeImageData: Data?
 
     init(coffeeImageData: Data?) {
