@@ -18,13 +18,13 @@ enum VGError: Error, Identifiable {
     var errorDescription: String? {
         switch self {
         case .invalidURL:
-            return "Invalid URL"
+            return "Services offline, try again later."
         case .invalidResponse:
-            return "Invalid Response"
+            return "Services offline, try again later."
         case .noDataAvailable:
-            return "No Data Available"
+            return "No images available at the moment, try again later."
         case .unknown:
-            return "Something Happened"
+            return "Something Happened, try again later."
         }
     }
 }

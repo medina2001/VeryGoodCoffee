@@ -17,7 +17,6 @@ final class CoffeePictureSelectionViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var currentError: VGError? = nil
     @Published var coffee: Coffee?
-    @Published var favoriteCoffees: [Coffee] = []
     
     
     // MARK: - Private Properties
@@ -42,8 +41,10 @@ final class CoffeePictureSelectionViewModel: ObservableObject {
         
         do {
             let newImage = try await coffeeAPIService?.fetchRandomCoffeePicture() ?? Data()
+            currentError = nil
             coffee = Coffee(coffeeImageData: newImage)
         } catch {
+            currentError = nil
             currentError = error as? VGError
             print(error.localizedDescription)
         }
@@ -51,7 +52,7 @@ final class CoffeePictureSelectionViewModel: ObservableObject {
 
     func favoriteCurrentPicture() throws {
         if let coffee {
-            favoriteCoffees.append(coffee)
+            // TODO: - Save on SwiftData
         }
     }
 }

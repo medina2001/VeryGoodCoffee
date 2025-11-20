@@ -16,6 +16,7 @@ struct CoffeePictureSelectionView: View {
     @StateObject private var viewModel = CoffeePictureSelectionViewModel()
     @Environment(\.modelContext) private var context: ModelContext
     @State private var isFavoritePicture: Bool = false
+    @Query var favoriteCoffees: [Coffee]
     
     // MARK: - Body
     
@@ -34,23 +35,9 @@ struct CoffeePictureSelectionView: View {
                     }
                     .opacity(viewModel.isLoading ? 0.4 : 1)
                     .animation(.default, value: viewModel.coffee?.coffeeImage)
-                    .alert(item: $viewModel.currentError) { error in
-                        Alert(
-                            title: Text("Error"),
-                            message: Text(error.errorDescription ?? "Something Happened"),
-                            primaryButton: .default(Text("Retry"), action: {
-                                Task { await viewModel.getCoffeePicture() }
-                            }),
-                            secondaryButton: .cancel(Text("OK"))
-                        )
-                    }
                 
                 VStack {
                     HStack {
-                        Text("☕️: \(viewModel.favoriteCoffees.count)")
-                            .padding()
-                            .animation(.easeInOut, value: viewModel.favoriteCoffees.count)
-                        
                         Spacer()
                         
                         FavoritePictureButton(isFavoritePicture: $isFavoritePicture) {
@@ -75,20 +62,48 @@ struct CoffeePictureSelectionView: View {
             } else {
                 if !viewModel.isLoading && viewModel.coffee?.coffeeImage == nil {
                     VStack(alignment: .center) {
+                        Spacer()
                         Button {
                             Task {
                                 await viewModel.getCoffeePicture()
                             }
                         } label: {
                             Text("Get new coffee image")
+                                .padding()
+                                .foregroundStyle(.black)
+                                .background(.blue)
+                                .cornerRadius(16)
                         }
+                        .padding(.bottom, 32)
                     }
                 }
+            }
+            VStack {
+                HStack {
+                    Text("☕️: \(favoriteCoffees.count)")
+                        .padding()
+                        .foregroundStyle(.black)
+                        .background(.blue)
+                        .cornerRadius(16)
+                        .animation(.easeInOut, value: favoriteCoffees.count)
+                    Spacer()
+                }
+                .padding()
+                Spacer()
             }
             
             if viewModel.isLoading {
                 LoadingView()
             }
+        }.alert(item: $viewModel.currentError) { error in
+            Alert(
+                title: Text("Error"),
+                message: Text(error.errorDescription ?? "Something Happened"),
+                primaryButton: .default(Text("Retry"), action: {
+                    Task { await viewModel.getCoffeePicture() }
+                }),
+                secondaryButton: .cancel(Text("OK"))
+            )
         }
     }
 }

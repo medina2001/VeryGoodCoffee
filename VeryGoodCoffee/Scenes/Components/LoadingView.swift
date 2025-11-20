@@ -14,7 +14,12 @@ struct LoadingView: View {
             Image(systemName: "cup.and.heat.waves.fill")
                 .font(.largeTitle)
                 .symbolEffect(.breathe)
+                .foregroundStyle(.brown)
             Spacer()
         }
     }
+}
+
+#Preview {
+    LoadingView()
 }
