@@ -1,0 +1,38 @@
+{
+  "configurations" : [
+    {
+      "id" : "FAD2BD47-62CF-4E02-96BF-F3035084EE13",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:VeryGoodCoffee.xcodeproj",
+      "identifier" : "72324A362ECD2FF400B4339F",
+      "name" : "VeryGoodCoffee"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:VeryGoodCoffee.xcodeproj",
+        "identifier" : "72324A452ECD2FF600B4339F",
+        "name" : "VeryGoodCoffeeTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:VeryGoodCoffee.xcodeproj",
+        "identifier" : "72324A4F2ECD2FF600B4339F",
+        "name" : "VeryGoodCoffeeUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

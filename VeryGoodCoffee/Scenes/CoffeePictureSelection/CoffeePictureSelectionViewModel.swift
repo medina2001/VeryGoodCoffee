@@ -23,7 +23,6 @@ final class CoffeePictureSelectionViewModel: ObservableObject {
     // MARK: - Private Properties
     
     private let coffeeAPIService: CoffeeAPIServiceProtocol
-    private var tryAgain: (() -> Void)?
 
     // MARK: - Init
     
@@ -48,6 +47,7 @@ final class CoffeePictureSelectionViewModel: ObservableObject {
             let newImage = try await coffeeAPIService.fetchRandomCoffeePicture()
             currentError = nil
             displayEmptyState = false
+            coffee = nil
             coffee = Coffee(coffeeImageData: newImage)
         } catch {
             currentError = nil

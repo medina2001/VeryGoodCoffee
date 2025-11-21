@@ -9,8 +9,12 @@ import SwiftUI
 import SwiftData
 
 struct FavoritePicturesView: View {
-    @Query var favoritePictures: [Coffee]
-    let columns = [GridItem(.flexible()), GridItem(.flexible())]
+    
+    // MARK: - Private properties
+    
+    @Environment(\.modelContext) private var context
+    @Query private var favoritePictures: [Coffee]
+    private let columns = [GridItem(.flexible()), GridItem(.flexible())]
     
     var body: some View {
         VStack {
@@ -33,6 +37,16 @@ struct FavoritePicturesView: View {
                                     .scaledToFit()
                                     .clipped()
                                     .cornerRadius(16)
+                                    .contextMenu {
+                                        Button(role: .destructive) {
+                                            withAnimation {
+                                                context.delete(coffee)
+                                                try? context.save()
+                                            }
+                                        } label: {
+                                            Label("Remove Favorite", systemImage: "trash")
+                                        }
+                                    }
                             }
                         }
                     }.padding()

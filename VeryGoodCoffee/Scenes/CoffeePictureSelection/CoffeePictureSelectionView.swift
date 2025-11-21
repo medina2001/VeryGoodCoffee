@@ -17,7 +17,7 @@ struct CoffeePictureSelectionView: View {
     @Environment(\.modelContext) private var context: ModelContext
     @State private var isFavoritePicture: Bool = false
     @State private var didTapNextPicture: Bool = false
-    @Query var favoriteCoffees: [Coffee]
+    @State private var saveError: VGError?
     
     // MARK: - Body
     
@@ -90,27 +90,29 @@ struct CoffeePictureSelectionView: View {
                 }
             }
         }
-        .alert(item: $viewModel.currentError) { error in
-            Alert(
-                title: Text("Error"),
-                message: Text(error.errorDescription ?? "Something Happened"),
-                primaryButton: .default(Text("Try again"), action: {
-                    Task { await viewModel.getCoffeePicture() }
-                }),
-                secondaryButton: .cancel(Text("OK"))
-            )
+        .errorAlert(error: $viewModel.currentError) {
+            Task { await viewModel.getCoffeePicture() }
+        }
+        .errorAlert(error: $saveError) {
+            favoriteCurrentPicture()
         }
     }
     
     private func favoriteCurrentPicture() {
-        if let coffee = viewModel.coffee {
-            context.insert(coffee)
-            do {
-                try context.save()
-                isFavoritePicture = true
-            } catch {
-            }
-        } else {
+        guard let coffee = viewModel.coffee else {
+            saveError = .noDataAvailable
+            HapticManager.shared.error()
+            return
+        }
+        
+        context.insert(coffee)
+        do {
+            try context.save()
+            isFavoritePicture = true
+            HapticManager.shared.success()
+        } catch {
+            saveError = .saveFailed(error.localizedDescription)
+            HapticManager.shared.error()
         }
     }
     
