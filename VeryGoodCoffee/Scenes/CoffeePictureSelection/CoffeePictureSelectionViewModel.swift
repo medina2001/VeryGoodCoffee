@@ -15,6 +15,7 @@ final class CoffeePictureSelectionViewModel: ObservableObject {
     // MARK: - Public Properties
     
     @Published var isLoading: Bool = false
+    @Published var displayEmptyState: Bool = false
     @Published var currentError: VGError? = nil
     @Published var coffee: Coffee?
     
@@ -46,10 +47,17 @@ final class CoffeePictureSelectionViewModel: ObservableObject {
         do {
             let newImage = try await coffeeAPIService.fetchRandomCoffeePicture()
             currentError = nil
+            displayEmptyState = false
             coffee = Coffee(coffeeImageData: newImage)
         } catch {
             currentError = nil
-            currentError = error as? VGError
+            if let error = error as? VGError {
+                currentError = error
+            } else {
+                currentError = .unknown(error.localizedDescription)
+            }
+            coffee = nil
+            displayEmptyState = true
             print(error.localizedDescription)
         }
     }

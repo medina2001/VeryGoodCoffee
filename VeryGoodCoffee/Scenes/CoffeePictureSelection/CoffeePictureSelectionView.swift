@@ -16,6 +16,7 @@ struct CoffeePictureSelectionView: View {
     @StateObject private var viewModel = CoffeePictureSelectionViewModel()
     @Environment(\.modelContext) private var context: ModelContext
     @State private var isFavoritePicture: Bool = false
+    @State private var didTapNextPicture: Bool = false
     @Query var favoriteCoffees: [Coffee]
     
     // MARK: - Body
@@ -31,14 +32,19 @@ struct CoffeePictureSelectionView: View {
                     .padding(16)
                     .onTapGesture (count: 2) {
                         Task {
-                            if !isFavoritePicture {
-                                favoriteCurrentPicture()
+                            if !isFavoritePicture && !viewModel.isLoading {
+                                withAnimation {
+                                    favoriteCurrentPicture()
+                                }
                             }
                         }
                     }
                     .onTapGesture {
                         if !viewModel.isLoading {
-                            nextCoffeePicture()
+                            withAnimation {
+                                nextCoffeePicture()
+                                didTapNextPicture = true
+                            }
                         }
                     }
                     .opacity(viewModel.isLoading ? 0.4 : 1)
@@ -46,13 +52,30 @@ struct CoffeePictureSelectionView: View {
                 
                 VStack {
                     HStack {
+                        if !didTapNextPicture {
+                            Text("Tap to see the next picture")
+                                .font(.subheadline)
+                                .padding()
+                                .background(.blue)
+                                .clipShape(.capsule)
+                                .padding()
+                        }
+                        
                         Spacer()
                         
                         FavoritePictureButton(isFavoritePicture: $isFavoritePicture) {
-                            favoriteCurrentPicture()
+                            if !isFavoritePicture {
+                                favoriteCurrentPicture()
+                            }
                         }
                     }
                     Spacer()
+                }
+            }
+            
+            if viewModel.displayEmptyState {
+                EmptyCoffeeView() {
+                    Task { await viewModel.getCoffeePicture() }
                 }
             }
             
@@ -71,7 +94,7 @@ struct CoffeePictureSelectionView: View {
             Alert(
                 title: Text("Error"),
                 message: Text(error.errorDescription ?? "Something Happened"),
-                primaryButton: .default(Text("Retry"), action: {
+                primaryButton: .default(Text("Try again"), action: {
                     Task { await viewModel.getCoffeePicture() }
                 }),
                 secondaryButton: .cancel(Text("OK"))
