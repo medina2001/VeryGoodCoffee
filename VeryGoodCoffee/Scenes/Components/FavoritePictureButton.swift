@@ -20,7 +20,8 @@ struct FavoritePictureButton: View {
             Image(systemName: isFavoritePicture ? "star.fill" : "star")
                 .font(.title)
                 .padding()
-                .foregroundStyle(isFavoritePicture ? .yellow : .white)
+                .foregroundStyle(isFavoritePicture ? .yellow : .primary)
+                .shadow(color: .black.opacity(0.3), radius: 2)
                 .contentTransition(
                     .symbolEffect(
                         .replace.magic(
