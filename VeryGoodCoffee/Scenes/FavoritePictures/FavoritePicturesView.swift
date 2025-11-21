@@ -39,8 +39,10 @@ struct FavoritePicturesView: View {
                                     .cornerRadius(16)
                                     .contextMenu {
                                         Button(role: .destructive) {
-                                            context.delete(coffee)
-                                            try? context.save()
+                                            withAnimation {
+                                                context.delete(coffee)
+                                                try? context.save()
+                                            }
                                         } label: {
                                             Label("Remove Favorite", systemImage: "trash")
                                         }

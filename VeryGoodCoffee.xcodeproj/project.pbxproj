@@ -27,6 +27,7 @@
 		72324A372ECD2FF400B4339F /* VeryGoodCoffee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VeryGoodCoffee.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		72324A462ECD2FF600B4339F /* VeryGoodCoffeeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VeryGoodCoffeeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		72324A502ECD2FF600B4339F /* VeryGoodCoffeeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VeryGoodCoffeeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		728D2DAE2ED0131C0006FFB8 /* VeryGoodCoffee.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = VeryGoodCoffee.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -75,6 +76,7 @@
 		72324A2E2ECD2FF400B4339F = {
 			isa = PBXGroup;
 			children = (
+				728D2DAE2ED0131C0006FFB8 /* VeryGoodCoffee.xctestplan */,
 				72324A392ECD2FF400B4339F /* VeryGoodCoffee */,
 				72324A492ECD2FF600B4339F /* VeryGoodCoffeeTests */,
 				72324A532ECD2FF600B4339F /* VeryGoodCoffeeUITests */,
