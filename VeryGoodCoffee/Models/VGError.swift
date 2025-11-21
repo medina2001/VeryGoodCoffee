@@ -11,6 +11,7 @@ enum VGError: Error, Identifiable {
     case invalidURL
     case invalidResponse
     case noDataAvailable
+    case saveFailed(String)
     case unknown(String)
     
     var id: String { localizedDescription }
@@ -23,6 +24,8 @@ enum VGError: Error, Identifiable {
             return "Services offline, try again later."
         case .noDataAvailable:
             return "No images available at the moment, try again later."
+        case .saveFailed(let description):
+            return "Failed to save favorite: \(description)"
         case .unknown(let description):
             return description
         }
