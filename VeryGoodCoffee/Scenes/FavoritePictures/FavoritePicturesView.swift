@@ -14,17 +14,21 @@ struct FavoritePicturesView: View {
     
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: columns, spacing: 8) {
-                ForEach(favoritePictures) { coffee in
-                    if let coffeeImage = coffee.coffeeImage {
-                        Image(uiImage: coffeeImage)
-                            .resizable()
-                            .scaledToFit()
-                            .clipped()
-                            .cornerRadius(16)
+            if favoritePictures.isEmpty {
+                EmptyCoffeeView()
+            } else {
+                LazyVGrid(columns: columns, spacing: 8) {
+                    ForEach(favoritePictures) { coffee in
+                        if let coffeeImage = coffee.coffeeImage {
+                            Image(uiImage: coffeeImage)
+                                .resizable()
+                                .scaledToFit()
+                                .clipped()
+                                .cornerRadius(16)
+                        }
                     }
-                }
-            }.padding()
+                }.padding()
+            }
         }
     }
 }

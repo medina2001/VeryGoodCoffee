@@ -9,14 +9,12 @@ import SwiftUI
 
 struct FavoritePictureButton: View {
     @Binding var isFavoritePicture: Bool
-    let addFavoriteCoffee: () -> Bool
+    let addFavoriteCoffee: () -> ()
     
     var body: some View {
         Button {
             withAnimation {
-                if addFavoriteCoffee() {
-                    isFavoritePicture.toggle()                    
-                }
+                addFavoriteCoffee()
             }
         } label: {
             Image(systemName: isFavoritePicture ? "star.fill" : "star")

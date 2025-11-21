@@ -12,7 +12,7 @@ import SwiftData
 struct VeryGoodCoffeeApp: App {
     var body: some Scene {
         WindowGroup {
-            FavoritePicturesView()
+            RootView()
         }
         .modelContainer(for: [Coffee.self])
     }

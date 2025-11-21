@@ -26,73 +26,48 @@ struct CoffeePictureSelectionView: View {
                 Image(uiImage: coffeeImage)
                     .resizable()
                     .scaledToFit()
+                    .clipped()
+                    .cornerRadius(16)
                     .padding(16)
-                    .onTapGesture {
+                    .onTapGesture (count: 2) {
                         Task {
-                            isFavoritePicture = false
-                            await viewModel.getCoffeePicture()
+                            if !isFavoritePicture {
+                                favoriteCurrentPicture()
+                            }
+                        }
+                    }
+                    .onTapGesture {
+                        if !viewModel.isLoading {
+                            nextCoffeePicture()
                         }
                     }
                     .opacity(viewModel.isLoading ? 0.4 : 1)
-                    .animation(.default, value: viewModel.coffee?.coffeeImage)
+                    .animation(.snappy, value: viewModel.coffee?.coffeeImage)
                 
                 VStack {
                     HStack {
                         Spacer()
                         
                         FavoritePictureButton(isFavoritePicture: $isFavoritePicture) {
-                            if let coffee = viewModel.coffee {
-                                context.insert(coffee)
-                                do {
-                                    try context.save()
-                                    return true
-                                } catch {
-                                    return false
-                                }
-                            } else {
-                                return false
-                            }
+                            favoriteCurrentPicture()
                         }
                     }
                     Spacer()
                 }
-            } else {
-                if !viewModel.isLoading && viewModel.coffee?.coffeeImage == nil {
-                    VStack(alignment: .center) {
-                        Spacer()
-                        Button {
-                            Task {
-                                await viewModel.getCoffeePicture()
-                            }
-                        } label: {
-                            Text("Get new coffee image")
-                                .padding()
-                                .foregroundStyle(.black)
-                                .background(.blue)
-                                .cornerRadius(16)
-                        }
-                        .padding(.bottom, 32)
-                    }
-                }
-            }
-            VStack {
-                HStack {
-                    Text("☕️: \(favoriteCoffees.count)")
-                        .padding()
-                        .foregroundStyle(.black)
-                        .background(.blue)
-                        .cornerRadius(16)
-                        .animation(.easeInOut, value: favoriteCoffees.count)
-                    Spacer()
-                }
-                .padding()
-                Spacer()
             }
             
             if viewModel.isLoading {
                 LoadingView()
             }
-        }.alert(item: $viewModel.currentError) { error in
+        }
+        .onAppear {
+            Task { @MainActor in
+                if viewModel.coffee == nil {
+                    await viewModel.getCoffeePicture()
+                }
+            }
+        }
+        .alert(item: $viewModel.currentError) { error in
             Alert(
                 title: Text("Error"),
                 message: Text(error.errorDescription ?? "Something Happened"),
@@ -101,6 +76,25 @@ struct CoffeePictureSelectionView: View {
                 }),
                 secondaryButton: .cancel(Text("OK"))
             )
+        }
+    }
+    
+    private func favoriteCurrentPicture() {
+        if let coffee = viewModel.coffee {
+            context.insert(coffee)
+            do {
+                try context.save()
+                isFavoritePicture = true
+            } catch {
+            }
+        } else {
+        }
+    }
+    
+    private func nextCoffeePicture() {
+        Task { @MainActor in
+            isFavoritePicture = false
+            await viewModel.getCoffeePicture()
         }
     }
 }
